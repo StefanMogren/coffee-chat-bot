@@ -1,0 +1,20 @@
+.own {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	font-style: normal;
+}
+
+.assistant {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	font-style: italic;
+}
+
+.message__discussion {
+	padding: 1rem;
+	border-radius: 15px;
+	border: 1px solid black;
+	background-color: rgb(240, 240, 240);
+}

@@ -1,0 +1,29 @@
+.flex-column {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.home-page {
+	width: 80%;
+}
+
+.home-page__form {
+	width: 600px;
+}
+
+.home-page__input {
+	width: 100%;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+.home-page__btn {
+	background-color: rgb(0, 128, 255);
+	color: white;
+	border-radius: 25px;
+}
