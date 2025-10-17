@@ -1,9 +1,12 @@
 import "./index.css";
 import { Message } from "@chatapp/message";
+import { FetchMenu } from "@chatapp/fetch-menu";
+import { getMenuTool } from "@chatapp/get-menu-tool";
+import { llm, llmWithTools } from "@chatapp/llm";
+
 import { useState } from "react";
 import { ChatOllama } from "@langchain/ollama";
 import { BufferMemory } from "langchain/memory";
-import { FetchMenu } from "@chatapp/fetch-menu";
 import { MessagesPlaceholder } from "@langchain/core/prompts";
 
 import { RunnableSequence } from "@langchain/core/runnables";
@@ -17,10 +20,6 @@ import {
 } from "@langchain/core/prompts";
 
 import { ConversationChain } from "langchain/chains";
-
-const llm = new ChatOllama({
-	model: "llama3.2:latest",
-});
 
 // BufferMemory är den som håller koll på vad som är memoryKey och inputKey
 const memory = new BufferMemory({
@@ -58,6 +57,8 @@ const convoChain = new ConversationChain({
 	memory,
 });
 
+const tools = { getMenuTool: getMenuTool };
+
 export const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const [isAiThinking, setIsAiThinking] = useState(false);
@@ -86,6 +87,21 @@ export const Chat = () => {
 		setMessages((prevState) => {
 			return [...prevState, { role: "user", text: question }];
 		});
+
+		const result = await llmWithTools.invoke("question");
+
+		console.log(result);
+
+		// Ej färdig...
+		if (!result.content && result.tool_calls.length > 0) {
+			const tool = result.tool_calls[0];
+			console.log(tools[tool.name]);
+			const toolResult = await tools[tool.name].invoke(tool.args);
+			console.log(toolResult);
+
+			/* 	const finalAnswer = await llm.invoke(`Här är resultatet från verktyget: ${toolResult}, anv`)
+			 */
+		}
 
 		// ----- Här börjar anropet till AI -----
 		const chatBot = RunnableSequence.from([
